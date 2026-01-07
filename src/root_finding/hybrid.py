@@ -3,12 +3,17 @@ A module that implements a root finding algorithm using Bisection and
 Newton-Raphson method combined.
 """
 
-
 from typing import Callable
 
 
-def hybrid(f: Callable[[float], float], dfdx: Callable[[float], float], 
-           xmin: float, xmax: float, tol1: float, tol2: float):
+def hybrid(
+    f: Callable[[float], float],
+    dfdx: Callable[[float], float],
+    xmin: float,
+    xmax: float,
+    tol1: float,
+    tol2: float,
+):
     r"""
     Find roots of a scalar function using Bisection and Newton Raphson method.
 
@@ -56,7 +61,7 @@ def hybrid(f: Callable[[float], float], dfdx: Callable[[float], float],
     Where ``| (xmax - xmin) / xmid | < tol1``, ``xmid = (xmax + xmin) / 2``
 
     The Newton-Raphson method is then applied using the output from the
-    bisection method. 
+    bisection method.
 
     Where ``| (x_next - x_current) / x_next | < tol2``
 
