@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Update code of conduct enforcement contact
+- Add documentation for bisection.py
+- Add documentation for newton1d.py
+- Add documentation for hybrid.py
+- Add documentation for plot_root.py
+- reformat .py files
 
 ## [0.1.0] - (1979-01-01)
 
