@@ -147,8 +147,8 @@ def bisection_find_roots(
             # Apply bisection method
             root = bisection(f, x[i-1], x[i], tol, max_iter)
 
-            # Robust duplicate root detection
-            if root not in roots:
+            # Duplicate root detection
+            if not roots or abs(root - roots[-1]) > tol:
                 roots = np.append(roots, root)
 
     return roots
