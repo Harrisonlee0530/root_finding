@@ -6,6 +6,7 @@ This is a module for testing the bisection.py module
 # import numpy as np
 
 from root_finding.bisection import bisection
+
 import pytest
 import math
 

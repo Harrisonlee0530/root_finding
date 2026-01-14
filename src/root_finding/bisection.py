@@ -61,4 +61,29 @@ def bisection(
             0.74827
     """
 
-    pass
+    xmid = 0
+    it = 0
+    while abs(xmax - xmin) > tol:
+
+        # Exit loop if we are at max iterations
+        if it == max_iter:
+            break
+        # calculate xmid
+        xmid = (xmax + xmin) / 2
+
+        # Check if xmid is a root
+        if f(xmid) == 0:
+            break
+
+        # Test if root is in lower interval
+        if f(xmin) * f(xmid) < 0:
+            # if yes use lower interval
+            xmax = xmid
+            it += 1
+        else:
+            # is no use upper interval
+            xmin = xmid
+            it += 1
+
+    # Return root approximation
+    return xmid
