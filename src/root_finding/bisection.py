@@ -2,7 +2,7 @@
 A module that implements a root finding algorithm using Bisection
 """
 
-from typing import Callable
+from typing import Callable, Sequence
 
 
 def bisection(
@@ -11,7 +11,7 @@ def bisection(
     xmax: float,
     tol: float = 1e-6,
     max_iter=100,
-) -> float:
+) -> Sequence[float]:
     r"""
        Find roots of a scalar function using Bisection.
 
