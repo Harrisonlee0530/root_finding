@@ -60,6 +60,12 @@ def test_bisection_bad_input():
     with pytest.raises(TypeError):
         bisection(func, xmin=2, xmax="1", tol=1e-9, max_iter=200)
 
+    with pytest.raises(TypeError):
+        bisection(func, xmin=2, xmax="1", tol="1e-9", max_iter=200)
+
+    with pytest.raises(TypeError):
+        bisection(func, xmin=2, xmax="1", tol=1e-9, max_iter=200.5)
+
 
 def test_bisection_runtime_error():
     # test funciton raises runtime errors
