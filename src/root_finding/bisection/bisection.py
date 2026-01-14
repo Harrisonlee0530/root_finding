@@ -2,16 +2,16 @@
 A module that implements a root finding algorithm using Bisection
 """
 
-from typing import Callable, Sequence
+from typing import Callable
 
 
 def bisection(
     f: Callable[[float], float],
     xmin: float,
     xmax: float,
-    tol: float = 1e-6,
-    max_iter=100,
-) -> Sequence[float]:
+    tol: float = 1e-9,
+    max_iter=500,
+) -> float:
     r"""
        Find roots of a scalar function using Bisection.
 
@@ -26,10 +26,10 @@ def bisection(
        tol : float, optional
            Absolute convergence tolerance for the bisection method.
            The method converges when |xmax - xmin| < `tol`.
-           The default value is 1e-6.
+           The default value is 1e-9.
         max_iter : int, optional
             maximum number of iterations allowable.
-            Default is 100.
+            Default is 500.
 
        Returns
        -------
@@ -43,16 +43,19 @@ def bisection(
             (i.e., if f(xmin) and f(xmax) have the same sign).
         RuntimeError
             If the algorithm fails to converge within `max_iter` iterations.
+        TypeError
+            If the inputs are not of the expected types.
 
        Notes
        -----
 
-       The bisection method requires that the root to be enclosed by the
+       In general the bisection method requires that the root to be enclosed by the
        initial interval ``[xmin, xmax]``, i.e., ``f(xmin) * f(xmax) < 0``.
        It is used to produce an estimate that lies sufficiently close to
        the root when the relative convergence criteria ``tol`` is satisfied:
 
        Where ``| (xmax - xmin) | < tol``
+
     `
        Examples
         --------
@@ -62,7 +65,7 @@ def bisection(
     """
     # Error handling for correct inputs
 
-    # note: correc type of f is enforced by python, raises TypeError
+    # note: correct type of f is enforced by python, raises TypeError
 
     if not (isinstance(xmin, float) or isinstance(xmax, int)):
         raise TypeError("'xmin' should be of type 'float'.")

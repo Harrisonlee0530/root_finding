@@ -78,7 +78,6 @@ def test_bisection_runtime_error():
     # test funciton raises runtime errors at max_iter
     with pytest.raises(RuntimeError):
         bisection(func, xmin=0, xmax=2, tol=1e-200, max_iter=200)
-    pass
 
 
 def test_bisection_value_error():
@@ -91,12 +90,3 @@ def test_bisection_value_error():
     # Ensure xmax > xmin
     with pytest.raises(ValueError):
         bisection(func, xmin=2, xmax=1, tol=1e-9, max_iter=200)
-    pass
-
-
-## Bisection for multiple roots is not guaranteed!
-# def test_bisection_roots_at_boundary():
-#     # test it finds roots at boundaries.
-#     bisection(func_for_roots_at_boundaries, xmin=-2, xmax=2, tol=1e-6, max_iter=200)
-
-#     pass
