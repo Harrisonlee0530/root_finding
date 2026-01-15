@@ -5,88 +5,79 @@ This is a module for testing the bisection.py module
 # from typing import Sequence
 # import numpy as np
 
-from root_finding.bisection import bisection
-
+from root_finding.bisection.bisection import bisection
 import pytest
-import math
 
 
 def func(x):
     return 3 * x**3 + 4 * x**2 - 2 * x - 2
 
 
-##########################################
-#
-# bisection for multiple roots -- not guaranteed
-
-# def func_for_roots_at_boundaries(x):
-#     # roots at -2, and +3
-#     return (x+2)*(x-3)
-
-# func = np.vectorize(func)
-# func_for_roots_at_boundaries = np.vectorize(func_for_roots_at_boundaries)
-
-##########################################
-
-# check function is converging in expected number of steps
-# check floating point errors are not mkaing us miss values. -round to tolerance
+# Use to test case when fmid == 0
+def func_2(x):
+    # y=0 at x=-1
+    return 2 * x + 2
 
 
-def test_bisection_output():
+# --- Accuracy Tests ---
+class TestBisectionAccuracy:
 
-    # First root
-    root1 = bisection(func, xmin=-2, xmax=-1, tol=1e-9, max_iter=200)
+    @pytest.mark.parametrize(
+        "xmin, xmax, expected",
+        [
+            (-2, -1, -1.479356),  # root 1
+            (-1, 0, -0.602249),  # root 2
+            (0, 1, 0.748272),  # root 3
+        ],
+    )
+    def test_finds_correct_roots(self, xmin, xmax, expected):
+        """Test for correct outputs."""
+        root = bisection(func, xmin, xmax, tol=1e-9, max_iter=200)
 
-    # Second root
-    root2 = bisection(func, xmin=-1, xmax=0, tol=1e-9, max_iter=200)
+        # Test the function returns the correct outputs
+        assert root == pytest.approx(expected, abs=1e-6)
+        assert func(root) == pytest.approx(0, abs=1e-6)
 
-    # Third root
-    root3 = bisection(func, xmin=0, xmax=1, tol=1e-9, max_iter=200)
-
-    # Test outputs are floats.
-    assert isinstance(root1, float)
-
-    # Test roots are true roots
-    assert math.isclose(func(root1), 0.0, abs_tol=1e-8)
-    assert math.isclose(func(root2), 0.0, abs_tol=1e-8)
-    assert math.isclose(func(root3), 0.0, abs_tol=1e-8)
-
-
-def test_bisection_bad_input():
-
-    # define non-callable object for incorrect function input
-    fake_func = "fake_func"
-
-    # check correct input types - typeErrors
-    with pytest.raises(TypeError):
-        bisection(func, xmin="2", xmax=1, tol=1e-9, max_iter=200)
-
-    with pytest.raises(TypeError):
-        bisection(func, xmin=2, xmax="1", tol=1e-9, max_iter=200)
-
-    with pytest.raises(TypeError):
-        bisection(func, xmin=0, xmax=2, tol="1e-9", max_iter=200)
-
-    with pytest.raises(TypeError):
-        bisection(func, xmin=0, xmax=2, tol=1e-9, max_iter=200.5)
-
-    with pytest.raises(TypeError):
-        bisection(fake_func, xmin=0, xmax=2, tol=1e-9, max_iter=200)
+    def test_midpoint_is_root(self):
+        """Test case when f(xmid) is exactly 0."""
+        root = bisection(func_2, xmin=-2, xmax=0, tol=1e-9, max_iter=200)
+        assert root == pytest.approx(-1.0, abs=1e-8)
 
 
-def test_bisection_runtime_error():
-    # test funciton raises runtime errors at max_iter
-    with pytest.raises(RuntimeError):
-        bisection(func, xmin=0, xmax=2, tol=1e-200, max_iter=200)
+# --- Error Hanlding Tests ---
+class TestBisectionErrors:
 
+    @pytest.mark.parametrize(
+        "f, xmin, xmax, tol, max_iter",
+        [
+            ("not_a_func", 0, 1, 1e-9, 200),  # Bad f
+            (func, "0", 1, 1e-9, 200),  # Bad xmin
+            (func, 1, "2", 1e-9, 200),  # Bad xmax
+            (func, 0, 1, "1e-9", 200),  # Bad tol
+            (func, 0, 1, 1e-9, 200.5),  # Bad max_iter (float)
+        ],
+    )
+    def test_type_errors(self, f, xmin, xmax, tol, max_iter):
+        """Test cases where input is not the expected type."""
+        with pytest.raises(TypeError):
+            bisection(f, xmin, xmax, tol, max_iter)
 
-def test_bisection_value_error():
-    # Ensure correct value inputs for xmax and xmin
+    def test_convergence_failure(self):
+        """Test convergence failure with impossible tolerance"""
+        with pytest.raises(
+            RuntimeError, match=f"Failed to converge in 100 iterations."
+        ):
+            bisection(func, 0, 2, tol=1e-200, max_iter=100)
 
-    # Ensure a root exists between xmin and xmax
-    with pytest.raises(ValueError):
-        bisection(func, xmin=1, xmax=2, tol=1e-9, max_iter=200)
+    def test_invalid_range(self):
+        """Test case where xmin is greater than xmax"""
+        with pytest.raises(ValueError, match="xmax should be greater than xmin"):
+            bisection(func, xmin=2, xmax=0, tol=1e-9, max_iter=100)
 
-    # Ensure xmax > xmin
-    with pytest.raises(ValueError):
-        bisection(func, xmin=2, xmax=1, tol=1e-9, max_iter=200)
+    def test_no_root(self):
+        """Test case where f(xmin) and f(xmax) have same sign"""
+        with pytest.raises(
+            ValueError,
+            match="Incorrect boundary values, fxmax x fxmin needs to be less than 0.",
+        ):
+            bisection(func, xmin=1, xmax=2, tol=1e-9, max_iter=100)

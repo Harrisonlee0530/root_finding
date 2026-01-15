@@ -3,6 +3,7 @@ A module that implements a root finding algorithm using Bisection
 """
 
 from typing import Callable
+import numpy as np
 
 
 def bisection(
@@ -67,11 +68,11 @@ def bisection(
 
     # note: correct type of f is enforced by python, raises TypeError
 
-    if not (isinstance(xmin, float) or isinstance(xmax, int)):
-        raise TypeError("'xmin' should be of type 'float'.")
+    if not (isinstance(xmin, (int, float))):
+        raise TypeError("'xmin' should be a number.")
 
-    if not (isinstance(xmax, float) or isinstance(xmax, int)):
-        raise TypeError("'xmax' should be of type 'float'.")
+    if not (isinstance(xmax, (int, float))):
+        raise TypeError("'xmax' should be a number.")
 
     if not isinstance(tol, float):
         raise TypeError("'tol' should be of type 'float'.")
@@ -82,36 +83,40 @@ def bisection(
     if xmax <= xmin:
         raise ValueError("xmax should be greater than xmin")
 
-    if f(xmin) * f(xmax) > 0:
+    if np.sign(f(xmin)) == np.sign(f(xmax)):
         raise ValueError(
-            "Incorrect boundary values, f(xmax)*f(xmin) needs to be less than 0."
+            "Incorrect boundary values, fxmax x fxmin needs to be less than 0."
         )
 
-    xmid = 0
+    # Bisection Method
+    fmin = f(xmin)
+    xmid = xmid = xmin + (xmax - xmin) / 2
     it = 0
-    while abs(xmax - xmin) > tol:
+
+    while (xmax - xmin) > tol:
 
         # Exit loop if we are at max iterations
         if it == max_iter:
-            raise RuntimeError(
-                f"Convergence failed, total iterations reached: {max_iter}"
-            )
+            raise RuntimeError(f"Failed to converge in {max_iter} iterations.")
+
         # calculate xmid
         xmid = (xmax + xmin) / 2
+        fmid = f(xmid)
 
         # Check if xmid is a root
-        if f(xmid) == 0:
+        if fmid == 0:
             break
 
         # Test if root is in lower interval
-        if f(xmin) * f(xmid) < 0:
+        elif np.sign(fmin) != np.sign(fmid):
             # if yes use lower interval
             xmax = xmid
-            it += 1
+
         else:
             # is no use upper interval
             xmin = xmid
-            it += 1
+            fmin = fmid
+        it += 1
 
     # Return root approximation
     return xmid
