@@ -14,8 +14,7 @@ def newton1d(
     df: Callable[[float], float],
     x0: float,
     tol1: float,
-    max_iter: int = 100,
-    eps_df: float = 1e-14,
+    max_iter: int = 1000,
 ) -> Sequence[float]:
     r"""
     Find roots of a scalar function using Newton–Raphson.
@@ -33,9 +32,6 @@ def newton1d(
         Must be strictly positive.
     max_iter : int, default=100
         Maximum number of iterations before declaring non-convergence.
-    eps_df : float, default=1e-14
-        Threshold to treat the derivative as "too close to zero" to avoid
-        division by ~0.
 
     Returns
     -------
@@ -104,12 +100,10 @@ def newton1d(
             if not math.isfinite(fx) or not math.isfinite(dfx):
                 raise ValueError("f(x) and df(x) must be finite during iteration.")
 
-            if abs(dfx) < eps_df:
-                raise ValueError(
-                    f"Derivative too close to zero at iter={k}, x={x_old} (df={dfx})."
-                )
+            if dfx == 0:
+                x_old += tol1  # avoid division by 0
 
-            x_new = x_old - fx / dfx
+            x_new = x_old - float(f(x_old)) / float(df(x_old))
 
             if not math.isfinite(x_new):
                 raise ValueError(f"Non-finite iterate encountered at iter={k}.")
