@@ -3,6 +3,7 @@ A module that implements a root finding algorithm using Bisection and
 Newton-Raphson method combined.
 """
 
+import numpy as np
 from typing import Callable, Sequence
 from root_finding.newton1d import newton1d
 from root_finding.bisection.bisection_find_roots import bisection_find_roots
@@ -16,7 +17,8 @@ def hybrid(
     tol1: float,
     tol2: float,
     max_iter1=500, 
-    max_iter2=500
+    max_iter2=500, 
+    n=50
 ) -> Sequence[float]:
     r"""
     Find multiple roots of a scalar function using a hybrid
@@ -47,6 +49,8 @@ def hybrid(
         Maximum number of iteration for bisection method, Default = 500
     max_iter2 : int
         Maximum number of iteration for Newton's method, Default = 500
+    n : int
+        number of initial guess if bisection fails for some reason (ex: when ``f(x) = x^2``)
 
     Returns
     -------
@@ -114,7 +118,8 @@ def hybrid(
     """
 
     x_b = bisection_find_roots(f, xmin, xmax, tol1, max_iter=max_iter1)
-
+    if len(x_b) == 0:
+        x_b = np.linspace(xmin, xmax, n)
     roots = newton1d(f, dfdx, x_b, tol2, max_iter=max_iter2)
 
     return roots
