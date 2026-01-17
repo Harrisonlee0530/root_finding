@@ -85,11 +85,11 @@ def plot_root(
     ax.axhline(0, color="black", linewidth=0.8)
 
     for r in roots:
-        ax.scatter(r, f_vec(r), zorder=3, label=f"x = {r:.6g}")
+        ax.scatter(r, f_vec(r), label=f"x = {r}")
 
     ax.set_xlabel("x")
     ax.set_ylabel("f(x)")
-    ax.set_title("Root finding via Hybrid Bisection–Newton")
+    ax.set_title("Root finding via Hybrid Bisection-Newton")
     ax.legend()
     ax.set_ylim(-1, 1)
 
