@@ -110,7 +110,7 @@ def newton1d(
 
             # Convergence check (safe relative criterion)
             if abs(x_new - x_old) <= tol1 * max(1.0, abs(x_new)):
-                if all(x_new - x_arr > tol1 * max(1.0, abs(x_new))):
+                if sum(np.isclose(x_new, x_arr, rtol=tol1)) == 0:
                     x_arr = np.append(x_arr, x_new)
 
             x_old = x_new
