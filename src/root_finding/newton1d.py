@@ -4,8 +4,9 @@ A module that implements a root finding algorithm using Newton-Raphson method.
 
 from __future__ import annotations
 
-from typing import Callable
+from typing import Callable, Sequence
 import math
+import numpy as np
 
 
 def newton1d(
@@ -13,9 +14,8 @@ def newton1d(
     df: Callable[[float], float],
     x0: float,
     tol1: float,
-    max_iter: int = 100,
-    eps_df: float = 1e-14,
-) -> float:
+    max_iter: int = 1000,
+) -> Sequence[float]:
     r"""
     Find roots of a scalar function using Newton–Raphson.
 
@@ -25,21 +25,18 @@ def newton1d(
         Function whose root is sought. Must accept a single scalar argument.
     df : callable
         Derivative of `f`. Must accept a single scalar argument.
-    x0 : float
-        Initial guess for the root.
+    x0 : float or Sequence[float]
+        Initial guesses for the root.
     tol1 : float
         Relative convergence tolerance for the Newton–Raphson method.
         Must be strictly positive.
     max_iter : int, default=100
         Maximum number of iterations before declaring non-convergence.
-    eps_df : float, default=1e-14
-        Threshold to treat the derivative as "too close to zero" to avoid
-        division by ~0.
 
     Returns
     -------
-    x : float
-        Estimated root of the function `f`.
+    x_arr : Sequence[float]
+        Estimated roots of the function `f`.
 
     Notes
     -----
@@ -85,33 +82,41 @@ def newton1d(
         raise ValueError("tol1 must be > 0.")
     if not isinstance(max_iter, int) or max_iter <= 0:
         raise ValueError("max_iter must be a positive integer.")
-    if not math.isfinite(x0):
-        raise ValueError("x0 must be a finite number.")
+    if type(x0) is float or type(x0) is int:
+        x0 = [x0]
+    for x in x0:
+        if not math.isfinite(x):
+            raise ValueError("All x0 must be a finite number.")
 
-    x_old = float(x0)
+    x_arr = np.array([])
 
-    for k in range(1, max_iter + 1):
-        fx = float(f(x_old))
-        dfx = float(df(x_old))
+    for x in x0:
+        x_old = float(x)
 
-        if not math.isfinite(fx) or not math.isfinite(dfx):
-            raise ValueError("f(x) and df(x) must be finite during iteration.")
+        for k in range(1, max_iter + 1):
+            fx = float(f(x_old))
+            dfx = float(df(x_old))
 
-        if abs(dfx) < eps_df:
-            raise ValueError(
-                f"Derivative too close to zero at iter={k}, x={x_old} (df={dfx})."
-            )
+            if not math.isfinite(fx) or not math.isfinite(dfx):
+                raise ValueError("f(x) and df(x) must be finite during iteration.")
 
-        x_new = x_old - fx / dfx
+            if dfx == 0:
+                x_old += tol1  # avoid division by 0
 
-        if not math.isfinite(x_new):
-            raise ValueError(f"Non-finite iterate encountered at iter={k}.")
+            x_new = x_old - float(f(x_old)) / float(df(x_old))
 
-        # Convergence check (safe relative criterion)
-        if abs(x_new - x_old) <= tol1 * max(1.0, abs(x_new)):
-            return x_new
+            if not math.isfinite(x_new):
+                raise ValueError(f"Non-finite iterate encountered at iter={k}.")
 
-        x_old = x_new
+            # Convergence check (safe relative criterion)
+            if abs(x_new - x_old) <= tol1 * max(1.0, abs(x_new)):
+                if all(x_new - x_arr > tol1 * max(1.0, abs(x_new))):
+                    x_arr = np.append(x_arr, x_new)
 
-    raise RuntimeError(f"Newton method did not converge within {max_iter} iterations.")
+            x_old = x_new
+
+    if len(x_arr) == 0:
+        raise RuntimeError(f"Newton method did not converge within {max_iter} iterations.")
+    else:
+        return x_arr
 
