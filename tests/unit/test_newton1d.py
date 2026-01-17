@@ -20,6 +20,14 @@ def test_newton1d_initial_guess_is_root():
     assert abs(root - 3.0) < 1e-12
 
 
+def test_newton1d_when_derivative_too_small():
+    # df(x)=0 at x=0 -> should be fine
+    f = lambda x: x**3
+    df = lambda x: 3 * x**2
+    root = newton1d(f, df, x0=0.0, tol1=1e-12)
+    assert abs(root - 0) < 1e-12
+
+
 def test_newton1d_raises_when_tol_not_positive():
     f = lambda x: x - 1
     df = lambda x: 1.0
@@ -27,14 +35,6 @@ def test_newton1d_raises_when_tol_not_positive():
         newton1d(f, df, x0=0.0, tol1=0.0)
     with pytest.raises(ValueError):
         newton1d(f, df, x0=0.0, tol1=-1e-6)
-
-
-def test_newton1d_raises_when_derivative_too_small():
-    # df(x)=0 at x=0 -> should raise ValueError (defensive coding)
-    f = lambda x: x**3
-    df = lambda x: 3 * x**2
-    with pytest.raises(ValueError):
-        newton1d(f, df, x0=0.0, tol1=1e-12)
 
 
 def test_newton1d_raises_on_nonconvergence_with_small_max_iter():
