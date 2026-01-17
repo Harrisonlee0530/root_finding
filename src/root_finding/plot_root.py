@@ -2,9 +2,7 @@
 A module that provides visualization tools for root finding algorithms.
 """
 
-# import numpy as np
-# import matplotlib.pyplot as plt
-from typing import Callable, Sequence
+from typing import Callable, Tuple
 from root_finding.hybrid import hybrid
 import numpy as np
 import matplotlib.pyplot as plt
@@ -17,18 +15,18 @@ def plot_root(
     xmax: float,
     tol1: float,
     tol2: float,
-    max_iter1: int = 500, 
-    max_iter2: int = 500, 
+    max_iter1: int = 500,
+    max_iter2: int = 500,
     npts: int = 1000,
     n: int = 50,
-):
+) -> Tuple[plt.Figure, plt.Axes]:
     r"""
     Plot a scalar function and visualize its roots using a hybrid
     bisection-Newton root-finding algorithm.
 
     This function computes the roots of a scalar function `f` within a
-    given interval using the `hybrid` method and displays both the
-    function and the detected roots on a 2D plot.
+    given interval using the `hybrid` method and returns a Matplotlib
+    figure containing the function plot and the detected roots.
 
     Parameters
     ----------
@@ -61,45 +59,38 @@ def plot_root(
 
     Returns
     -------
-    None
-        This function produces a plot and does not return a value.
-
-    See Also
-    --------
-    bisection_find_roots :
-        Bisection-based method for detecting multiple candidate roots.
-    newton1d :
-        Newton-Raphson method for one-dimensional root finding.
-    hybrid :
-        Combined bisection and Newton-Raphson root-finding algorithm.
-
-    Notes
-    -----
-    The function ``f(x)`` is plotted over the interval ``[xmin, xmax]``,
-    along with the x-axis for reference. Roots detected by the hybrid
-    algorithm are marked on the plot as points.
-
-    The quality and completeness of the detected roots depend on the
-    resolution of the bisection search and the convergence behavior of
-    Newton's method.
+    fig : matplotlib.figure.Figure
+        The Matplotlib figure object.
+    ax : matplotlib.axes.Axes
+        The Matplotlib axes containing the plot.
 
     Examples
     --------
     >>> f = lambda x: x**2 - 4
     >>> df = lambda x: 2*x
-    >>> plot_root(f, df, -3, 3, tol1=1e-6, tol2=1e-12)
+    >>> fig, ax = plot_root(f, df, -3, 3, 1e-6, 1e-12)
+    >>> fig.savefig("roots.png")
     """
-    
+
+    # Compute roots
     roots = hybrid(f, dfdx, xmin, xmax, tol1, tol2, max_iter1, max_iter2, n)
-    
+
+    # Prepare data
     x = np.linspace(xmin, xmax, npts)
-    f = np.vectorize(f)
+    f_vec = np.vectorize(f)
 
-    plt.plot(x, f(x), label="f(x)")
+    # Create plot
+    fig, ax = plt.subplots()
+    ax.plot(x, f_vec(x), label="f(x)")
+    ax.axhline(0, color="black", linewidth=0.8)
+
     for r in roots:
-        plt.scatter(r, f(r), label="x = {}".format(r))
-    plt.legend()
-    plt.ylim(-1, 1)
-    plt.show()
+        ax.scatter(r, f_vec(r), zorder=3, label=f"x = {r:.6g}")
 
-    return None
+    ax.set_xlabel("x")
+    ax.set_ylabel("f(x)")
+    ax.set_title("Root finding via Hybrid Bisection–Newton")
+    ax.legend()
+    ax.set_ylim(-1, 1)
+
+    return fig, ax
