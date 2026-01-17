@@ -125,6 +125,10 @@ def hybrid(
         raise TypeError("n must be a positive integer")
     if n <= 0:
         raise ValueError("n must be a positive integer")
+    if max_iter1 <= 0:
+        raise ValueError("max_iter1 must be a positive integer")
+    if max_iter2 <= 0:
+        raise ValueError("max_iter2 must be a positive integer")
 
     x_b = bisection_find_roots(f, xmin, xmax, tol1, max_iter=max_iter1)
     if len(x_b) == 0:
