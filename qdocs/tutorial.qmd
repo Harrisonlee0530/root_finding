@@ -1,0 +1,149 @@
+---
+title: Tutorial
+jupyter:
+  jupytext:
+    text_representation:
+      extension: .qmd
+      format_name: quarto
+      format_version: '1.0'
+      jupytext_version: 1.16.7
+  kernelspec:
+    display_name: 522_proj
+    language: python
+    name: 522_proj
+---
+
+## Getting Started with root_finding
+
+This tutorial will walk you through the main features of the `root_finding` package.
+
+## Installation
+
+First, install the package:
+
+```bash
+pip install root_finding
+```
+
+## Finding Roots with Different Methods
+
+### 1. Bisection Method
+
+The bisection method is the most robust approach. It's guaranteed to converge if the function changes sign in the interval.
+
+```{python}
+from root_finding.bisection.bisection import bisection
+import numpy as np
+
+# Define a simple function: x^2 - 4
+def f(x):
+    return x**2 - 4
+
+# Find the positive root
+root = bisection(f, xmin=0, xmax=3, tol=1e-6)
+print(f"Root found: {root}")
+print(f"Verification: f({root}) = {f(root)}")
+```
+
+### 2. Finding Multiple Roots
+
+Use `bisection_find_roots` to automatically search for multiple roots in an interval:
+
+```{python}
+from root_finding.bisection.bisection_find_roots import bisection_find_roots
+
+# Find all roots in [-3, 3]
+roots = bisection_find_roots(f, xmin=-3, xmax=3, tol=1e-6)
+print(f"Roots found: {roots}")
+```
+
+### 3. Newton-Raphson Method
+
+For faster convergence, use Newton's method (requires the derivative):
+
+```{python}
+from root_finding.newton1d import newton1d
+
+# Define the derivative
+def df(x):
+    return 2*x
+
+# Find roots starting from different initial guesses
+roots1 = newton1d(f, df, x0=1.0, tol1=1e-6)
+roots2 = newton1d(f, df, x0=-1.0, tol1=1e-6)
+
+print(f"Root from x0=1.0: {roots1}")
+print(f"Root from x0=-1.0: {roots2}")
+```
+
+### 4. Hybrid Method
+
+The hybrid method combines bisection and Newton-Raphson for both robustness and speed:
+
+```{python}
+from root_finding.hybrid import hybrid
+
+# Find all roots in the interval
+roots = hybrid(f, df, xmin=-3, xmax=3, tol1=1e-6, tol2=1e-6)
+print(f"All roots found: {roots}")
+```
+
+## Visualizing Results
+
+Use the plotting function to visualize the function and its roots:
+
+```{python}
+#| eval: false
+from root_finding.plot_root import plot_root
+
+# Plot the function and show the roots
+plot_root(f, df, xmin=-3, xmax=3, tol1=1e-6, tol2=1e-6)
+```
+
+This will create a plot showing:
+- The function curve
+- The roots marked on the x-axis
+- Grid lines for reference
+
+## More Complex Example
+
+Let's try a more interesting function:
+
+```{python}
+import numpy as np
+
+# A more complex function with multiple roots
+def g(x):
+    return np.sin(x) - 0.5*x
+
+def dg(x):
+    return np.cos(x) - 0.5
+
+# Find roots in [0, 10]
+roots = hybrid(g, dg, xmin=0, xmax=10, tol1=1e-8, tol2=1e-8)
+print(f"Roots of sin(x) - 0.5x in [0, 10]: {roots}")
+```
+
+## Tips and Best Practices
+
+1. **Choose the right method**:
+   - Use **bisection** when you need guaranteed convergence
+   - Use **Newton-Raphson** when you have the derivative and want speed
+   - Use **hybrid** for the best of both worlds
+
+2. **Set appropriate tolerances**:
+   - `tol` or `tol1`: Controls convergence tolerance (smaller = more accurate)
+   - `tol2`: For bisection part in hybrid method
+   
+3. **Initial guesses matter** (for Newton's method):
+   - Choose initial guesses close to the expected root
+   - Multiple initial guesses can find multiple roots
+
+4. **Check convergence**:
+   - Always verify that `f(root)` is close to zero
+   - If convergence fails, try adjusting tolerances or max iterations
+
+## Next Steps
+
+- Check out the [API Reference](reference/index.qmd) for complete documentation
+- Visit our [GitHub repository](https://github.com/Harrisonlee0530/root_finding) for examples and issues

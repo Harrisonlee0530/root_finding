@@ -1,0 +1,56 @@
+---
+title: root_finding
+jupyter:
+  jupytext:
+    text_representation:
+      extension: .qmd
+      format_name: quarto
+      format_version: '1.0'
+      jupytext_version: 1.16.7
+  kernelspec:
+    display_name: 522_proj
+    language: python
+    name: 522_proj
+---
+
+## Welcome to root_finding
+
+A Python package for finding roots of scalar functions using various numerical methods.
+
+## Features
+
+- **Bisection Method**: Robust root finding using interval bisection
+- **Newton-Raphson Method**: Fast convergence using derivatives  
+- **Hybrid Method**: Combines bisection and Newton-Raphson for reliability and speed
+- **Visualization Tools**: Plot functions and visualize root finding results
+
+## Quick Start
+
+### Installation
+
+```bash
+pip install root_finding
+```
+
+### Basic Usage
+
+```python
+from root_finding.bisection.bisection import bisection
+
+# Define a function
+def f(x):
+    return x**2 - 4
+
+# Find root in interval [0, 3]
+root = bisection(f, xmin=0, xmax=3, tol=1e-6)
+print(f"Root: {root}")  # Should be approximately 2.0
+```
+
+## Documentation
+
+- [Tutorial](tutorial.qmd): Learn how to use the package
+- [API Reference](reference/index.qmd): Complete API documentation
+
+## GitHub Repository
+
+Visit our [GitHub repository](https://github.com/Harrisonlee0530/root_finding) for source code and to report issues.
