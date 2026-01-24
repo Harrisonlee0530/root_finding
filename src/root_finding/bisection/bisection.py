@@ -14,7 +14,7 @@ def bisection(
     max_iter=500,
 ) -> float:
     r"""
-    Find roots of a scalar function using Bisection.
+    Find a root of a scalar function using the bisection method.
 
     Parameters
     ----------
@@ -25,45 +25,47 @@ def bisection(
     xmax : float
         Upper bound of the initial interval.
     tol : float, optional
-        Absolute convergence tolerance for the bisection method.
-        The method converges when `|xmax - xmin| < tol`.
-        The default value is 1e-9.
+        Absolute convergence tolerance.
+        Convergence is achieved when ``|xmax - xmin| < tol``.
+        Default is ``1e-9``.
     max_iter : int, optional
-        maximum number of iterations allowable.
-        Default is 500.
+        Maximum number of iterations allowed.
+        Default is ``500``.
 
     Returns
     -------
     root : float
-        The estimated root of the function `f`.
+        Estimated root of the function ``f``.
 
     Raises
     ------
     ValueError
-        If the initial interval [xmin, xmax] does not bracket the root
-        (i.e., if f(xmin) and f(xmax) have the same sign).
+        If the initial interval ``[xmin, xmax]`` does not bracket a root
+        (that is, if ``f(xmin)`` and ``f(xmax)`` have the same sign).
     RuntimeError
-        If the algorithm fails to converge within `max_iter` iterations.
+        If the algorithm fails to converge within ``max_iter`` iterations.
     TypeError
         If the inputs are not of the expected types.
 
     Notes
     -----
+    The bisection method requires the root to be enclosed within the
+    initial interval ``[xmin, xmax]`` such that:
 
-    In general the bisection method requires that the root to be enclosed by the
-    initial interval ``[xmin, xmax]``, i.e., ``f(xmin) * f(xmax) < 0``.
-    It is used to produce an estimate that lies sufficiently close to
-    the root when the relative convergence criteria ``tol`` is satisfied:
+    :math:`f(x_{\min}) \cdot f(x_{\max}) < 0`
 
-    Where ``| (xmax - xmin) | < tol``
+    Convergence is guaranteed for continuous functions when this
+    condition is satisfied and:
 
-`
+    :math:`|x_{\max} - x_{\min}| < \mathrm{tol}`
+
     Examples
     --------
-    >>> root = bisection(lambda x: 3*x**3 + 4*x**2 - 2*x - 2, 0, 2, max_iter = 500)
-    >>> print(f"{root:.5f}")
-        0.74827
+    >>> root = bisection(lambda x: 3*x**3 + 4*x**2 - 2*x - 2, 0, 2, max_iter=500)
+    >>> f"{root:.5f}"
+    '0.74827'
     """
+
     # Error handling for correct inputs
 
     # note: correct type of f is enforced by python, raises TypeError

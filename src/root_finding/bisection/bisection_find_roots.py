@@ -66,8 +66,7 @@ def bisection_find_roots(
     When searching for multiple roots, this method:
 
     * Is **not guaranteed** to find all roots
-    * Cannot detect roots with multiplicity greater than one
-    (e.g. ``x**2``)
+    * Cannot detect roots with multiplicity greater than one (e.g. ``x**2``)
     * May return duplicate roots
 
     Examples
