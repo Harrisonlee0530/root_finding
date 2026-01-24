@@ -1,0 +1,46 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "root_finding"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: tutorial.qmd
+        text: Tutorial
+      - href: reference/index.qmd
+        text: Reference
+
+format:
+  html:
+    toc: true
+    theme: cosmo
+
+quartodoc:
+  style: pkgdown
+  dir: reference
+  package: root_finding
+  title: "API Reference"
+  sections:
+    - title: "Bisection Method"
+      desc: "Root finding using bisection method"
+      contents:
+        - bisection.bisection.bisection
+        - bisection.bisection_find_roots.bisection_find_roots
+    
+    - title: "Newton's Method"
+      desc: "Root finding using Newton-Raphson method"
+      contents:
+        - newton1d.newton1d
+    
+    - title: "Hybrid Method"
+      desc: "Root finding using hybrid Bisection-Newton method"
+      contents:
+        - hybrid.hybrid
+    
+    - title: "Visualization"
+      desc: "Tools for plotting root finding results"
+      contents:
+        - plot_root.plot_root

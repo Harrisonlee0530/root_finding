@@ -1,0 +1,72 @@
+# newton1d { #root_finding.newton1d }
+
+`newton1d`
+
+A module that implements a root finding algorithm using Newton-Raphson method.
+
+## Functions
+
+| Name | Description |
+| --- | --- |
+| [newton1d](#root_finding.newton1d.newton1d) | Find roots of a scalar function using Newton–Raphson. |
+
+### newton1d { #root_finding.newton1d.newton1d }
+
+```python
+newton1d.newton1d(f, df, x0, tol1, max_iter=1000)
+```
+
+Find roots of a scalar function using Newton–Raphson.
+
+#### Parameters {.doc-section .doc-section-parameters}
+
+| Name     | Type                       | Description                                                                              | Default    |
+|----------|----------------------------|------------------------------------------------------------------------------------------|------------|
+| f        | callable                   | Function whose root is sought. Must accept a single scalar argument.                     | _required_ |
+| df       | callable                   | Derivative of `f`. Must accept a single scalar argument.                                 | _required_ |
+| x0       | float or Sequence\[float\] | Initial guesses for the root.                                                            | _required_ |
+| tol1     | float                      | Relative convergence tolerance for the Newton–Raphson method. Must be strictly positive. | _required_ |
+| max_iter | int                        | Maximum number of iterations before declaring non-convergence.                           | `100`      |
+
+#### Returns {.doc-section .doc-section-returns}
+
+| Name   | Type              | Description                          |
+|--------|-------------------|--------------------------------------|
+| x_arr  | Sequence\[float\] | Estimated roots of the function `f`. |
+
+#### Notes {.doc-section .doc-section-notes}
+
+The Newton–Raphson method updates the current estimate using the local
+linear approximation of `f` at the current point:
+
+``x_{n+1} = x_n - f(x_n) / df(x_n)``.
+
+Convergence is declared when the step size is sufficiently small in a
+relative sense:
+
+``|x_{n+1} - x_n| <= tol1 * max(1, |x_{n+1}|)``.
+
+This is numerically safer than ``|(x_{n+1}-x_n)/x_{n+1}|`` because it avoids
+division by zero when ``x_{n+1} = 0``.
+
+The method often converges rapidly when `x0` is sufficiently close to the
+true root and `df(x)` is well-behaved, but it may fail when `df(x_n) = 0`
+(or very close to zero) or when the iterates diverge.
+
+#### Raises {.doc-section .doc-section-raises}
+
+| Name   | Type         | Description                                                                                            |
+|--------|--------------|--------------------------------------------------------------------------------------------------------|
+|        | TypeError    | If `f` or `df` is not callable.                                                                        |
+|        | ValueError   | If `tol1 <= 0`, `max_iter <= 0`, `x0` is not finite, or `df(x)` is too close to zero during iteration. |
+|        | RuntimeError | If the method does not converge within `max_iter` iterations.                                          |
+
+#### Examples {.doc-section .doc-section-examples}
+
+```python
+>>> f = lambda x: x**2 - 2
+>>> df = lambda x: 2*x
+>>> root = newton1d(f, df, 1.0, 1e-12)
+>>> abs(root - 2**0.5) < 1e-10
+True
+```

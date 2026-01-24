@@ -1,0 +1,54 @@
+# plot_root.plot_root { #root_finding.plot_root.plot_root }
+
+```python
+plot_root.plot_root(
+    f,
+    dfdx,
+    xmin,
+    xmax,
+    tol1,
+    tol2,
+    max_iter1=500,
+    max_iter2=500,
+    npts=1000,
+    n=50,
+)
+```
+
+Plot a scalar function and visualize its roots using a hybrid
+bisection-Newton root-finding algorithm.
+
+This function computes the roots of a scalar function `f` within a
+given interval using the `hybrid` method and returns a Matplotlib
+figure containing the function plot and the detected roots.
+
+## Parameters {.doc-section .doc-section-parameters}
+
+| Name      | Type     | Description                                                                                                                   | Default    |
+|-----------|----------|-------------------------------------------------------------------------------------------------------------------------------|------------|
+| f         | callable | Scalar function to be plotted. Must accept a single scalar argument.                                                          | _required_ |
+| dfdx      | callable | Derivative of `f`. Must accept a single scalar argument.                                                                      | _required_ |
+| xmin      | float    | Lower bound of the plotting and root-search interval.                                                                         | _required_ |
+| xmax      | float    | Upper bound of the plotting and root-search interval.                                                                         | _required_ |
+| tol1      | float    | Convergence tolerance passed to the bisection-based root search stage of the hybrid method. Must be strictly positive.        | _required_ |
+| tol2      | float    | Relative convergence tolerance passed to the Newton-Raphson refinement stage of the hybrid method. Must be strictly positive. | _required_ |
+| max_iter1 | int      | Maximum number of iterations allowed for the bisection-based root search. Default is 500.                                     | `500`      |
+| max_iter2 | int      | Maximum number of iterations allowed for Newton's method. Default is 500.                                                     | `500`      |
+| npts      | int      | Number of points used to discretize the interval ``[xmin, xmax]`` for plotting the function. Default is 1000.                 | `1000`     |
+| n         | int      | Number of subintervals used by the bisection-based root search. Passed to the hybrid solver. Default is 50.                   | `50`       |
+
+## Returns {.doc-section .doc-section-returns}
+
+| Name   | Type                     | Description                              |
+|--------|--------------------------|------------------------------------------|
+| fig    | matplotlib.figure.Figure | The Matplotlib figure object.            |
+| ax     | matplotlib.axes.Axes     | The Matplotlib axes containing the plot. |
+
+## Examples {.doc-section .doc-section-examples}
+
+```python
+>>> f = lambda x: x**2 - 4
+>>> df = lambda x: 2*x
+>>> fig, ax = plot_root(f, df, -3, 3, 1e-6, 1e-12)
+>>> fig.savefig("roots.png")
+```

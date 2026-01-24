@@ -1,0 +1,24 @@
+---
+title: Tutorial
+jupyter:
+  jupytext:
+    text_representation:
+      extension: .qmd
+      format_name: quarto
+      format_version: '1.0'
+      jupytext_version: 1.16.7
+  kernelspec:
+    display_name: 522_proj
+    language: python
+    name: 522_proj
+---
+
+This page demonstrates how to use the main functions in `root_finding`.
+
+## What functions are available?
+
+Run this to see what is exported by the package:
+
+```python
+import root_finding
+[x for x in dir(root_finding) if not x.startswith("_")]
