@@ -1,5 +1,5 @@
 ---
-title: Reference
+title: API Reference
 jupyter:
   jupytext:
     text_representation:
@@ -13,8 +13,4 @@ jupyter:
     name: 522_proj
 ---
 
-## Public API
-
-::: {#api}
-{{< quartodoc >}}
-:::
+{{< quartodoc-ref >}}

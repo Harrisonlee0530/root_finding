@@ -16,9 +16,9 @@
   {
     "objectID": "reference.html",
     "href": "reference.html",
-    "title": "Reference",
+    "title": "API Reference",
     "section": "",
-    "text": "{{&lt; quartodoc &gt;}}"
+    "text": "{{&lt; quartodoc-ref &gt;}}"
   },
   {
     "objectID": "reference.html#public-api",
@@ -306,5 +306,47 @@
     "title": "hybrid.hybrid",
     "section": "",
     "text": "&gt;&gt;&gt; f = lambda x: x**2 - 4\n&gt;&gt;&gt; df = lambda x: 2*x\n&gt;&gt;&gt; roots = hybrid(f, df, -3, 3, tol1=1e-6, tol2=1e-12)\n&gt;&gt;&gt; sorted(roots)\n[-2.0, 2.0]\n&gt;&gt;&gt; f = lambda x: x**3 - x\n&gt;&gt;&gt; df = lambda x: 3*x**2 - 1\n&gt;&gt;&gt; roots = hybrid(f, df, -2, 2, tol1=1e-6, tol2=1e-12)\n&gt;&gt;&gt; sorted(roots)\n[-1.0, 0.0, 1.0]"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "root_finding",
+    "section": "",
+    "text": "A Python package for finding roots of scalar functions using various numerical methods."
+  },
+  {
+    "objectID": "index.html#welcome-to-root_finding",
+    "href": "index.html#welcome-to-root_finding",
+    "title": "root_finding",
+    "section": "",
+    "text": "A Python package for finding roots of scalar functions using various numerical methods."
+  },
+  {
+    "objectID": "index.html#features",
+    "href": "index.html#features",
+    "title": "root_finding",
+    "section": "Features",
+    "text": "Features\n\nBisection Method: Robust root finding using interval bisection\nNewton-Raphson Method: Fast convergence using derivatives\n\nHybrid Method: Combines bisection and Newton-Raphson for reliability and speed\nVisualization Tools: Plot functions and visualize root finding results"
+  },
+  {
+    "objectID": "index.html#quick-start",
+    "href": "index.html#quick-start",
+    "title": "root_finding",
+    "section": "Quick Start",
+    "text": "Quick Start\n\nInstallation\npip install root_finding\n\n\nBasic Usage\nfrom root_finding.bisection.bisection import bisection\n\n# Define a function\ndef f(x):\n    return x**2 - 4\n\n# Find root in interval [0, 3]\nroot = bisection(f, xmin=0, xmax=3, tol=1e-6)\nprint(f\"Root: {root}\")  # Should be approximately 2.0"
+  },
+  {
+    "objectID": "index.html#documentation",
+    "href": "index.html#documentation",
+    "title": "root_finding",
+    "section": "Documentation",
+    "text": "Documentation\n\nTutorial: Learn how to use the package\nAPI Reference: Complete API documentation"
+  },
+  {
+    "objectID": "index.html#github-repository",
+    "href": "index.html#github-repository",
+    "title": "root_finding",
+    "section": "GitHub Repository",
+    "text": "GitHub Repository\nVisit our GitHub repository for source code and to report issues."
   }
 ]
