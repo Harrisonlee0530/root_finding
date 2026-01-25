@@ -43,3 +43,42 @@ def test_newton1d_raises_on_nonconvergence_with_small_max_iter():
     df = lambda x: 2 * x
     with pytest.raises(RuntimeError):
         newton1d(f, df, x0=1.0, tol1=1e-30, max_iter=1)
+
+def test_newton1d_trigonometric_function():
+    """Test Newton's method on trigonometric function sin(x) = 0."""
+    f = lambda x: math.sin(x)
+    df = lambda x: math.cos(x)
+    
+    # Find root near pi
+    roots = newton1d(f, df, x0=3.0, tol1=1e-10)
+    root = roots[0] 
+    
+    # Should converge to pi
+    assert abs(root - math.pi) < 1e-8
+    assert abs(f(root)) < 1e-10
+
+
+def test_newton1d_exponential_function():
+    """Test Newton's method on exponential function e^x - 2 = 0."""
+    f = lambda x: math.exp(x) - 2
+    df = lambda x: math.exp(x)
+    
+    # Root should be ln(2)
+    roots = newton1d(f, df, x0=1.0, tol1=1e-10)
+    root = roots[0] 
+    
+    assert abs(root - math.log(2)) < 1e-8
+    assert abs(f(root)) < 1e-10
+
+
+def test_newton1d_negative_starting_point():
+    """Test Newton's method with negative initial guess."""
+    f = lambda x: x**2 - 4
+    df = lambda x: 2 * x
+    
+    # Start from negative side, should find -2
+    roots = newton1d(f, df, x0=-3.0, tol1=1e-10)
+    root = roots[0] 
+    
+    assert abs(root - (-2.0)) < 1e-8
+    assert abs(f(root)) < 1e-10
