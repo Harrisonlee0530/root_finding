@@ -54,3 +54,4 @@ bisection.bisection.bisection(f, xmin, xmax, tol=1e-09, max_iter=500)
     >>> root = bisection(lambda x: 3*x**3 + 4*x**2 - 2*x - 2, 0, 2, max_iter = 500)
     >>> print(f"{root:.5f}")
         0.74827
+
